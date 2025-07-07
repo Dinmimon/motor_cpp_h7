@@ -1,0 +1,43 @@
+/*
+ * Motor.cpp
+ *
+ *  Created on: Apr 7, 2025
+ *      Author: din.maimon
+ */
+
+#include "Motor.h"
+#include <stdint.h>
+#include "HAL_PWM.h"
+
+
+void Motor::motor_current_control_loop() {
+	// current sampling
+	electrical_angle = motor_encoder->getAngle();
+	_calculate_sin_and_cos_values_of_angle();
+	//  ClarkeParke  for dq transformation
+	clarke_park.w = inv_clarke_park.w;
+	clarke_park.v = inv_clarke_park.v;
+	clarke_park.u = inv_clarke_park.u;
+	ClarkeParke();
+
+//	// current control loop
+//	q_current_pid.update(0, inv_clarke_park.q, 0);
+//	d_current_pid.update(0, inv_clarke_park.d, 0);
+	//  ClarkeParke  for dq transformation
+	InvClarkeParke();
+	HAL_PWM_Write(TIM_CHANNEL_1, inv_clarke_park.u);
+	HAL_PWM_Write(TIM_CHANNEL_2, inv_clarke_park.v);
+	HAL_PWM_Write(TIM_CHANNEL_3, inv_clarke_park.w);
+
+}
+
+void Motor::updateEncoder() {
+	// Only needed for simulated encoders
+	if (motor_encoder) {
+		motor_encoder->update();
+	}
+}
+Motor::~Motor() {
+	// TODO Auto-generated destructor stub
+}
+
