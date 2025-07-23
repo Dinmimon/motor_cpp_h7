@@ -33,6 +33,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "drv8323.h"
+#include "motor_manager.h"
+#include "Motor.h"
+#include "ABEncoder.h"
+#include "Fake_encoder.h" // or your fake encoder header
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -53,7 +58,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+Motor motorR;  // Right motor
+Motor motorL;  // Left motor
+#define VSHEN_POLE_PAIRS 1
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -77,6 +84,7 @@ void init_gate_driver(void)
   drv8323_registers_init();
 }
 
+ ABEncoder abEncoder(4096, timerFreqHz, htim3, VSHEN_POLE_PAIRS);
 /* USER CODE END 0 */
 
 /**
@@ -130,7 +138,16 @@ int main(void)
   MX_SPI1_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
+  int32_t timerFreqHz;
+  timerFreqHz = (HAL_RCC_GetPCLK1Freq() / htim3.Init.Period);
+ 
   init_gate_driver();
+  
+  // Initialize motor manager
+  MotorManager::init();
+  
+  // Set up motors in motor manager
+  MotorManager::setMotors(motorR, motorL);
 
   /* USER CODE END 2 */
 

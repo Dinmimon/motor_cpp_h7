@@ -11,6 +11,7 @@
  */
 
 #include "stm32h7xx_hal.h"
+#include "HAL_PWM.h"
 static TIM_HandleTypeDef *timer_pwm_obj;
 
 void HAL_PWM_Init(TIM_HandleTypeDef &htim) {
