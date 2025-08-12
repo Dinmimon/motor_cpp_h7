@@ -25,8 +25,17 @@ void MotorManager::init()
 
 void MotorManager::setMotors(Motor &motorR, Motor &motorL)
 {
-    motor[0] = &motorR;
-    motor[1] = &motorL;
+    //protection against null pointers
+    if (&motorR == nullptr || &motorL == nullptr) {
+        return;
+    }   
+    // Set the static motor pointers to the provided motor instances
+
+        // If motors are already set, we can either replace them or handle it as needed
+	motor[0] = &motorR;
+	motor[1] = &motorL;
+
+
 }
 
 void MotorManager::processADCCallback(ADC_HandleTypeDef *hadc)
@@ -64,14 +73,14 @@ void MotorManager::processADCCallback(ADC_HandleTypeDef *hadc)
     // if (motor[0] != nullptr) {
     //     motor[0]->setEncoder(encoder);
     //     motor[0]->updateEncoder();
-    //     motor[0]->motor_current_control_loop();
+        motor[0]->motor_current_control_loop();
     // }
     
     HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
 }
 
 // C wrapper function for HAL callback
-void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc) 
+void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
     MotorManager::processADCCallback(hadc);
 }

@@ -84,7 +84,34 @@ void init_gate_driver(void)
   drv8323_registers_init();
 }
 
- ABEncoder abEncoder(4096, timerFreqHz, htim3, VSHEN_POLE_PAIRS);
+HAL_StatusTypeDef init_motor_adc(void)
+{
+    // ADC initialization
+    if (HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET_LINEARITY, ADC_SINGLE_ENDED) != HAL_OK)
+    {
+        // Calibration Error
+        return HAL_ERROR;
+    }
+    if (HAL_ADCEx_Calibration_Start(&hadc2, ADC_CALIB_OFFSET_LINEARITY, ADC_SINGLE_ENDED) != HAL_OK)
+    {
+        // ADC Error
+        return HAL_ERROR;
+    }
+
+    if (HAL_ADCEx_InjectedStart_IT(&hadc1) != HAL_OK)
+    {
+        // ADC Error
+        return HAL_ERROR;
+    }
+    if (HAL_ADCEx_InjectedStart_IT(&hadc2) != HAL_OK)
+    {
+        // ADC Error
+        return HAL_ERROR;
+    }
+    return HAL_OK;
+}
+
+ABEncoder abEncoder(4096, 20000, htim3, VSHEN_POLE_PAIRS);
 /* USER CODE END 0 */
 
 /**
@@ -138,17 +165,27 @@ int main(void)
   MX_SPI1_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-  int32_t timerFreqHz;
-  timerFreqHz = (HAL_RCC_GetPCLK1Freq() / htim3.Init.Period);
- 
+
+
+//  int32_t timerFreqHz;
+//  timerFreqHz = HAL_RCC_GetPCLK1Freq() / htim1.Init.Period;
+
   init_gate_driver();
-  
+
+  // Set encoder for right motor
+  motorR.setEncoder(abEncoder);
+  motorR.motor_current_control_loop();
   // Initialize motor manager
   MotorManager::init();
-  
+
   // Set up motors in motor manager
   MotorManager::setMotors(motorR, motorL);
-
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+  HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_ALL);
+  HAL_TIM_Encoder_Start(&htim4,TIM_CHANNEL_ALL);
+  init_motor_adc();
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -272,7 +309,10 @@ void PeriphCommonClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+//void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
+//{
+//
+//}
 /* USER CODE END 4 */
 
 /**

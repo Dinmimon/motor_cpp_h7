@@ -71,6 +71,7 @@
 									<listOptionValue builtIn="false" value="../Encoder"/>
 									<listOptionValue builtIn="false" value="../HAL_interface"/>
 									<listOptionValue builtIn="false" value="../trap_traj"/>
+									<listOptionValue builtIn="false" value="../Sensors"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.828222035" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>

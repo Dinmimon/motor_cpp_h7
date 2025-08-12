@@ -33,6 +33,7 @@
 ABEncoder::ABEncoder(int resolution, float timerFreqHz, TIM_HandleTypeDef& htim, int polePairs)
     : _resolution(resolution), _timerFreqHz(timerFreqHz), _htim(htim), _polePairs(polePairs), _position(0), _velocity(0.0f)
 {
+	HAL_TIM_Encoder_Start(&htim,TIM_CHANNEL_ALL);
     _lastUpdateTime = __HAL_TIM_GET_COUNTER(&_htim);
 }
 

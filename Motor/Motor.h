@@ -32,7 +32,6 @@ private:
 	Base_adc_sensor *vbus;
 	Base_adc_sensor *curr_a;
 	Base_adc_sensor *curr_b;
-	Motor *motor;
 	void setCurrentSensors (Base_adc_sensor &sensorA , Base_adc_sensor &sensorB) {curr_a = &sensorA; curr_b = &sensorB; }
 	void setPWM (volatile uint32_t &pwm_A , volatile uint32_t &pwm_B,volatile uint32_t &pwm_C) {pwm_a = &pwm_A; pwm_b = &pwm_B;  pwm_c = &pwm_C;}
 

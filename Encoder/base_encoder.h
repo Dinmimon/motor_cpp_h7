@@ -12,7 +12,6 @@ class EncoderBase {
 public:
 	virtual float getAngle() = 0; // radians
 	virtual void reset() = 0;
-	virtual ~EncoderBase(){};
 	virtual void update() = 0;
 };
 
