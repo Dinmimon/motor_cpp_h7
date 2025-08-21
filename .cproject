@@ -128,15 +128,15 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Encoder"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="FOC"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="HAL_interface"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Motor"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Encoder"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Sensors"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Motor"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="trap_traj"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="FOC"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
