@@ -1,26 +1,23 @@
-/* ========================================
+/*
+ * HAL_PWM.h
  *
- * Copyright YOUR COMPANY, THE YEAR
- * All Rights Reserved
- * UNPUBLISHED, LICENSED SOFTWARE.
- *
- * CONFIDENTIAL AND PROPRIETARY INFORMATION
- * WHICH IS THE PROPERTY OF your company.
- *
- * ========================================
-*/
-#ifndef HAL_PWM_H
-#define HAL_PWM_H
+ *  Created on: Aug 31, 2025
+ *      Author: din.maimon
+ */
 
-#include "stm32h7xx_hal.h"
+#ifndef HAL_PWM_H_
+#define HAL_PWM_H_
+#include <stdint.h>
 
-void HAL_PWM_Init(TIM_HandleTypeDef *timer_pwm_pionet);
+class HAL_PWM {
+public:
+	HAL_PWM();
+	void init(volatile uint32_t *pwm_A, volatile uint32_t *pwm_B, volatile uint32_t *pwm_C, uint32_t period);
+private:
+	volatile uint32_t *pwm_A_;
+	volatile uint32_t *pwm_B_;
+	volatile uint32_t *pwm_C_;
+	uint32_t Period_;
+};
 
-void HAL_PWM_Write(uint32_t channel ,uint32_t duty);
-
-
-uint32_t HAL_PWM_Get_Prd(void);
-
-#endif
-
-/* [] END OF FILE */
+#endif /* HAL_PWM_H_ */

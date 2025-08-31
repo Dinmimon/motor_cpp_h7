@@ -1,40 +1,24 @@
-/* ========================================
+/*
+ * HAL_PWM.cpp
  *
- * Copyright YOUR COMPANY, THE YEAR
- * All Rights Reserved
- * UNPUBLISHED, LICENSED SOFTWARE.
- *
- * CONFIDENTIAL AND PROPRIETARY INFORMATION
- * WHICH IS THE PROPERTY OF your company.
- *
- * ========================================
+ *  Created on: Aug 31, 2025
+ *      Author: din.maimon
  */
 
-#include "stm32h7xx_hal.h"
 #include "HAL_PWM.h"
-static TIM_HandleTypeDef *timer_pwm_obj;
 
-void HAL_PWM_Init(TIM_HandleTypeDef &htim) {
-	timer_pwm_obj = &htim;
+HAL_PWM::HAL_PWM()
+{
+
 }
 
-void HAL_PWM_Write(uint32_t channel ,uint32_t duty) {
-	switch (channel) {
-	case TIM_CHANNEL_1:
-		timer_pwm_obj->Instance->CCR1 = (timer_pwm_obj->Init.Period / 2) + duty;
-		break;
-	case TIM_CHANNEL_2:
-		timer_pwm_obj->Instance->CCR2 = (timer_pwm_obj->Init.Period / 2) + duty;
-		break;
-	case TIM_CHANNEL_3:
-		timer_pwm_obj->Instance->CCR3 = (timer_pwm_obj->Init.Period / 2) + duty;
-		break;
-	case TIM_CHANNEL_4:
-		timer_pwm_obj->Instance->CCR4 = duty;
-		break;
-	default:
-		break;
-	}
-}
 
-/* [] END OF FILE */
+
+void HAL_PWM::init(volatile uint32_t *pwm_A, volatile uint32_t *pwm_B, volatile uint32_t *pwm_C, uint32_t period)
+{
+	pwm_A_ = pwm_A;
+	pwm_B_ = pwm_B;
+	pwm_C_ = pwm_C;
+	Period_ = period;
+
+}

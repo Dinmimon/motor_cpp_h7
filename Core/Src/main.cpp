@@ -37,7 +37,7 @@
 #include "Motor.h"
 #include "ABEncoder.h"
 #include "Fake_encoder.h" // or your fake encoder header
-
+#include "HAL_PWM.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -112,6 +112,9 @@ HAL_StatusTypeDef init_motor_adc(void)
 }
 
 ABEncoder abEncoder(4096, 20000, htim3, VSHEN_POLE_PAIRS);
+FakeEncoderSim fakeEncoder(20000, 0.5);
+HAL_PWM motorR_PWM;
+volatile uint32_t *pwm_pointr;
 /* USER CODE END 0 */
 
 /**
@@ -171,20 +174,24 @@ int main(void)
 //  timerFreqHz = HAL_RCC_GetPCLK1Freq() / htim1.Init.Period;
 
   init_gate_driver();
-
-  // Set encoder for right motor
-  motorR.setEncoder(abEncoder);
-  motorR.motor_current_control_loop();
-  // Initialize motor manager
-  MotorManager::init();
-
-  // Set up motors in motor manager
-  MotorManager::setMotors(motorR, motorL);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
   HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_ALL);
   HAL_TIM_Encoder_Start(&htim4,TIM_CHANNEL_ALL);
+  // Set encoder for right motor
+  motorR.setEncoder(fakeEncoder);
+//  HAL_PWM motorR_PWM(htim1.Instance->CCR1, htim1.Instance->CCR2, htim1.Instance->CCR3, htim1.Init.Period);
+
+  motorR.setPWMDriver(motorR_PWM);
+  motorR_PWM.init(&htim1.Instance->CCR1, &htim1.Instance->CCR2, &htim1.Instance->CCR3, htim1.Init.Period);
+//  pwm_pointr = &htim1.Instance->CCR1;
+  // Initialize motor manager
+  MotorManager::init();
+
+  // Set up motors in motor manager
+  MotorManager::setMotors(motorR, motorL);
+
   init_motor_adc();
   /* USER CODE END 2 */
 

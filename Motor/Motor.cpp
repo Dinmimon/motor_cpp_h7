@@ -7,18 +7,15 @@
 
 #include "Motor.h"
 #include <stdint.h>
-#include "HAL_PWM.h"
 
-
+uint32_t pwm_period = 0;
 void Motor::motor_current_control_loop() {
 	// current sampling
 	motor_encoder->update();
 	electrical_angle = motor_encoder->getAngle();
 	_calculate_sin_and_cos_values_of_angle();
 	//  ClarkeParke  for dq transformation
-	clarke_park.w = inv_clarke_park.w;
-	clarke_park.v = inv_clarke_park.v;
-	clarke_park.u = inv_clarke_park.u;
+
 	ClarkeParke();
 
 //	// current control loop
@@ -26,10 +23,6 @@ void Motor::motor_current_control_loop() {
 //	d_current_pid.update(0, inv_clarke_park.d, 0);
 	//  ClarkeParke  for dq transformation
 	InvClarkeParke();
-//	HAL_PWM_Write(TIM_CHANNEL_1, inv_clarke_park.u);
-//	HAL_PWM_Write(TIM_CHANNEL_2, inv_clarke_park.v);
-//	HAL_PWM_Write(TIM_CHANNEL_3, inv_clarke_park.w);
-
 }
 
 void Motor::updateEncoder() {
