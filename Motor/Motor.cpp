@@ -23,6 +23,7 @@ void Motor::motor_current_control_loop() {
 //	d_current_pid.update(0, inv_clarke_park.d, 0);
 	//  ClarkeParke  for dq transformation
 	InvClarkeParke();
+	pwm->setPWM_Duty(inv_clarke_park.u, inv_clarke_park.v, inv_clarke_park.w);
 }
 
 void Motor::updateEncoder() {

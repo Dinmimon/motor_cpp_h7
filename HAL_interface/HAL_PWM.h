@@ -10,16 +10,19 @@
 #include <stdint.h>
 #include "tim.h"
 #include "stm32h7xx_hal.h"
-class HAL_PWM {
+class HAL_PWM
+{
 public:
 	HAL_PWM();
-	void init(volatile uint32_t *pwm_A, volatile uint32_t *pwm_B, volatile uint32_t *pwm_C, uint32_t period , TIM_HandleTypeDef *htim);
+	void setPWM_Duty(float dutyA, float dutyB, float dutyC); // 0.0 to 1.0
+	void init(volatile uint32_t *pwm_A, volatile uint32_t *pwm_B, volatile uint32_t *pwm_C, uint32_t period, TIM_HandleTypeDef *htim);
+
 private:
 	volatile uint32_t *pwm_A_;
 	volatile uint32_t *pwm_B_;
 	volatile uint32_t *pwm_C_;
 	uint32_t Period_;
-	void setPWM_Duty (float dutyA, float dutyB, float dutyC); // 0.0 to 1.0
+
 private:
 };
 

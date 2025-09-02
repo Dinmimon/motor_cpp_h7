@@ -29,4 +29,5 @@ void HAL_PWM::setPWM_Duty(float dutyA, float dutyB, float dutyC)
 	*pwm_A_ =  Period_/2 + dutyA;
 	*pwm_B_ =  Period_/2 + dutyB;
 	*pwm_C_ =  Period_/2 + dutyC;
+
 }

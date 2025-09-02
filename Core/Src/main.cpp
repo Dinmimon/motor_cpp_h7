@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2025 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2025 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -58,8 +58,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-Motor motorR;  // Right motor
-Motor motorL;  // Left motor
+Motor motorR; // Right motor
+Motor motorL; // Left motor
 #define VSHEN_POLE_PAIRS 1
 /* USER CODE END PV */
 
@@ -74,7 +74,6 @@ void MX_FREERTOS_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-
 void init_gate_driver(void)
 {
   /* sip and gate driver init */
@@ -86,29 +85,29 @@ void init_gate_driver(void)
 
 HAL_StatusTypeDef init_motor_adc(void)
 {
-    // ADC initialization
-    if (HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET_LINEARITY, ADC_SINGLE_ENDED) != HAL_OK)
-    {
-        // Calibration Error
-        return HAL_ERROR;
-    }
-    if (HAL_ADCEx_Calibration_Start(&hadc2, ADC_CALIB_OFFSET_LINEARITY, ADC_SINGLE_ENDED) != HAL_OK)
-    {
-        // ADC Error
-        return HAL_ERROR;
-    }
+  // ADC initialization
+  if (HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET_LINEARITY, ADC_SINGLE_ENDED) != HAL_OK)
+  {
+    // Calibration Error
+    return HAL_ERROR;
+  }
+  if (HAL_ADCEx_Calibration_Start(&hadc2, ADC_CALIB_OFFSET_LINEARITY, ADC_SINGLE_ENDED) != HAL_OK)
+  {
+    // ADC Error
+    return HAL_ERROR;
+  }
 
-    if (HAL_ADCEx_InjectedStart_IT(&hadc1) != HAL_OK)
-    {
-        // ADC Error
-        return HAL_ERROR;
-    }
-    if (HAL_ADCEx_InjectedStart_IT(&hadc2) != HAL_OK)
-    {
-        // ADC Error
-        return HAL_ERROR;
-    }
-    return HAL_OK;
+  if (HAL_ADCEx_InjectedStart_IT(&hadc1) != HAL_OK)
+  {
+    // ADC Error
+    return HAL_ERROR;
+  }
+  if (HAL_ADCEx_InjectedStart_IT(&hadc2) != HAL_OK)
+  {
+    // ADC Error
+    return HAL_ERROR;
+  }
+  return HAL_OK;
 }
 
 ABEncoder abEncoder(4096, 20000, htim3, VSHEN_POLE_PAIRS);
@@ -118,9 +117,9 @@ volatile uint32_t *pwm_pointr;
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
+ * @brief  The application entry point.
+ * @retval int
+ */
 int main(void)
 {
 
@@ -169,27 +168,28 @@ int main(void)
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
 
-
-//  int32_t timerFreqHz;
-//  timerFreqHz = HAL_RCC_GetPCLK1Freq() / htim1.Init.Period;
+  //  int32_t timerFreqHz;
+  //  timerFreqHz = HAL_RCC_GetPCLK1Freq() / htim1.Init.Period;
 
   init_gate_driver();
 
-  HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_ALL);
-  HAL_TIM_Encoder_Start(&htim4,TIM_CHANNEL_ALL);
+  HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
+  HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
   // Set encoder for right motor
   motorR.setEncoder(fakeEncoder);
-//  HAL_PWM motorR_PWM(htim1.Instance->CCR1, htim1.Instance->CCR2, htim1.Instance->CCR3, htim1.Init.Period);
+  //  HAL_PWM motorR_PWM(htim1.Instance->CCR1, htim1.Instance->CCR2, htim1.Instance->CCR3, htim1.Init.Period);
 
   motorR.setPWMDriver(motorR_PWM);
   motorR_PWM.init(&htim1.Instance->CCR1, &htim1.Instance->CCR2, &htim1.Instance->CCR3, htim1.Init.Period, &htim1);
-//  pwm_pointr = &htim1.Instance->CCR1;
+  //  pwm_pointr = &htim1.Instance->CCR1;
   // Initialize motor manager
   MotorManager::init();
 
   // Set up motors in motor manager
   MotorManager::setMotors(motorR, motorL);
-
+  HAL_GPIO_WritePin(MTRR_INLA_GPIO_Port, MTRR_INLA_Pin, GPIO_PIN_SET); //	set INL to true
+  HAL_GPIO_WritePin(MTRR_INLB_GPIO_Port, MTRR_INLB_Pin, GPIO_PIN_SET); //	set INL to true
+  HAL_GPIO_WritePin(MTRR_INLC_GPIO_Port, MTRR_INLC_Pin, GPIO_PIN_SET); //	set INL to true
   init_motor_adc();
   /* USER CODE END 2 */
 
@@ -216,27 +216,29 @@ int main(void)
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+ * @brief System Clock Configuration
+ * @retval None
+ */
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /** Supply configuration update enable
-  */
+   */
   HAL_PWREx_ConfigSupply(PWR_LDO_SUPPLY);
 
   /** Configure the main internal regulator output voltage
-  */
+   */
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE0);
 
-  while(!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
+  while (!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY))
+  {
+  }
 
   /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
+   * in the RCC_OscInitTypeDef structure.
+   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
@@ -255,10 +257,8 @@ void SystemClock_Config(void)
   }
 
   /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2
-                              |RCC_CLOCKTYPE_D3PCLK1|RCC_CLOCKTYPE_D1PCLK1;
+   */
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2 | RCC_CLOCKTYPE_D3PCLK1 | RCC_CLOCKTYPE_D1PCLK1;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.SYSCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_HCLK_DIV2;
@@ -276,18 +276,16 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief Peripherals Common Clock Configuration
-  * @retval None
-  */
+ * @brief Peripherals Common Clock Configuration
+ * @retval None
+ */
 void PeriphCommonClock_Config(void)
 {
   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
 
   /** Initializes the peripherals clock
-  */
-  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_ADC|RCC_PERIPHCLK_SPI3
-                              |RCC_PERIPHCLK_SPI2|RCC_PERIPHCLK_SPI1
-                              |RCC_PERIPHCLK_FDCAN;
+   */
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_ADC | RCC_PERIPHCLK_SPI3 | RCC_PERIPHCLK_SPI2 | RCC_PERIPHCLK_SPI1 | RCC_PERIPHCLK_FDCAN;
   PeriphClkInitStruct.PLL2.PLL2M = 2;
   PeriphClkInitStruct.PLL2.PLL2N = 15;
   PeriphClkInitStruct.PLL2.PLL2P = 2;
@@ -314,20 +312,20 @@ void PeriphCommonClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-//void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
+// void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
 //{
 //
-//}
+// }
 /* USER CODE END 4 */
 
 /**
-  * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM2 interrupt took place, inside
-  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
-  * a global variable "uwTick" used as application time base.
-  * @param  htim : TIM handle
-  * @retval None
-  */
+ * @brief  Period elapsed callback in non blocking mode
+ * @note   This function is called  when TIM2 interrupt took place, inside
+ * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+ * a global variable "uwTick" used as application time base.
+ * @param  htim : TIM handle
+ * @retval None
+ */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
@@ -343,9 +341,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 }
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
@@ -357,14 +355,14 @@ void Error_Handler(void)
   /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
+ * @brief  Reports the name of the source file and the source line number
+ *         where the assert_param error has occurred.
+ * @param  file: pointer to the source file name
+ * @param  line: assert_param error line source number
+ * @retval None
+ */
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
