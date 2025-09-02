@@ -174,9 +174,7 @@ int main(void)
 //  timerFreqHz = HAL_RCC_GetPCLK1Freq() / htim1.Init.Period;
 
   init_gate_driver();
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+
   HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_ALL);
   HAL_TIM_Encoder_Start(&htim4,TIM_CHANNEL_ALL);
   // Set encoder for right motor
@@ -184,7 +182,7 @@ int main(void)
 //  HAL_PWM motorR_PWM(htim1.Instance->CCR1, htim1.Instance->CCR2, htim1.Instance->CCR3, htim1.Init.Period);
 
   motorR.setPWMDriver(motorR_PWM);
-  motorR_PWM.init(&htim1.Instance->CCR1, &htim1.Instance->CCR2, &htim1.Instance->CCR3, htim1.Init.Period);
+  motorR_PWM.init(&htim1.Instance->CCR1, &htim1.Instance->CCR2, &htim1.Instance->CCR3, htim1.Init.Period, &htim1);
 //  pwm_pointr = &htim1.Instance->CCR1;
   // Initialize motor manager
   MotorManager::init();
