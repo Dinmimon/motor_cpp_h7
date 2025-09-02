@@ -60,6 +60,8 @@
 /* USER CODE BEGIN PV */
 Motor motorR; // Right motor
 Motor motorL; // Left motor
+
+
 #define VSHEN_POLE_PAIRS 1
 /* USER CODE END PV */
 
@@ -113,6 +115,7 @@ HAL_StatusTypeDef init_motor_adc(void)
 ABEncoder abEncoder(4096, 20000, htim3, VSHEN_POLE_PAIRS);
 FakeEncoderSim fakeEncoder(20000, 0.5);
 HAL_PWM motorR_PWM;
+Base_adc_sensor motorR_current_sensorPa;
 volatile uint32_t *pwm_pointr;
 /* USER CODE END 0 */
 
@@ -178,9 +181,11 @@ int main(void)
   // Set encoder for right motor
   motorR.setEncoder(fakeEncoder);
   //  HAL_PWM motorR_PWM(htim1.Instance->CCR1, htim1.Instance->CCR2, htim1.Instance->CCR3, htim1.Init.Period);
-
   motorR.setPWMDriver(motorR_PWM);
   motorR_PWM.init(&htim1.Instance->CCR1, &htim1.Instance->CCR2, &htim1.Instance->CCR3, htim1.Init.Period, &htim1);
+  motorR_current_sensorPa.init_adc_sensor(&hadc1.Instance->JDR1, 1.0f, 0.0f);
+
+  motorR.setCurrentSensors(motorR_current_sensorPa, motorR_current_sensorPa); // Using same sensor for phase B for testing
   //  pwm_pointr = &htim1.Instance->CCR1;
   // Initialize motor manager
   MotorManager::init();

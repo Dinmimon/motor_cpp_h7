@@ -21,9 +21,13 @@ protected:
 	int32_t value_in_sensor_units;
 
 public:
-	Base_adc_sensor(volatile uint32_t *raw_val_ptr, float Factor, float Offset)
-		: raw_val(raw_val_ptr), factor(Factor), offset(Offset) {};
-	virtual ~Base_adc_sensor() {};
+	Base_adc_sensor() {};
+	void init_adc_sensor(volatile uint32_t *raw_val_ptr, float Factor, float Offset) {
+		raw_val = raw_val_ptr;
+		factor = Factor;
+		offset = Offset;
+		// Initialize the ADC sensor (if needed)
+	}
 
 	// Pure virtual function to read a raw ADC value in.
 	// Derived classes must provide their implementation.
