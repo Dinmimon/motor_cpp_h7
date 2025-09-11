@@ -11,43 +11,30 @@
 
 // Static member definitions
 Motor* MotorManager::motor[2] = {nullptr, nullptr};
-TRAPEZ_trapezoidalTrajectory_t MotorManager::trg;
-int MotorManager::traj_activate = 0;
+TrajController MotorManager::trajectory;
 FakeEncoderSim MotorManager::encoder{10000, 1};
 
 void MotorManager::init()
 {
     // Initialize trajectory and other motor-related variables
-    traj_activate = 0;
     motor[0] = nullptr;
     motor[1] = nullptr;
 }
 
-void MotorManager::setMotors(Motor &motorR, Motor &motorL)
+void MotorManager::setMotor(uint8_t index, Motor& motor)
 {
     //protection against null pointers
-    if (&motorR == nullptr || &motorL == nullptr) {
+    if (&motor == nullptr) {
         return;
     }   
-    // Set the static motor pointers to the provided motor instances
 
-        // If motors are already set, we can either replace them or handle it as needed
-	motor[0] = &motorR;
-	motor[1] = &motorL;
-
-
+    if (index < 2) {
+        MotorManager::motor[index] = &motor;
+    }
 }
 
 void MotorManager::processADCCallback(ADC_HandleTypeDef *hadc)
 {
-    // Trajectory processing (currently commented out from original)
-    // if (traj_activate == 1) {
-    //     trapez_trajectory_process(&trg, 0.001);
-    // }
-    // else
-    // {
-    //     trajectory_init(&trg, 500.0f, 500.0f, 500.0f, 2000.0f);
-    // }
 
     if (hadc->Instance == ADC1)
     {
@@ -69,12 +56,12 @@ void MotorManager::processADCCallback(ADC_HandleTypeDef *hadc)
         HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_RESET);
     }
 
-    // // Motor control processing
-    // if (motor[0] != nullptr) {
-    //     motor[0]->setEncoder(encoder);
-    //     motor[0]->updateEncoder();
+    if (motor[0] != nullptr) {
         motor[0]->motor_current_control_loop();
-    // }
+    }
+    if (motor[1] != nullptr) {
+        motor[1]->motor_current_control_loop();
+    }
     
     HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
 }

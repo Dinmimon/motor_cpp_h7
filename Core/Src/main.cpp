@@ -191,7 +191,7 @@ int main(void)
   MotorManager::init();
 
   // Set up motors in motor manager
-  MotorManager::setMotors(motorR, motorL);
+  MotorManager::setMotor(0, motorR);
   HAL_GPIO_WritePin(MTRR_INLA_GPIO_Port, MTRR_INLA_Pin, GPIO_PIN_SET); //	set INL to true
   HAL_GPIO_WritePin(MTRR_INLB_GPIO_Port, MTRR_INLB_Pin, GPIO_PIN_SET); //	set INL to true
   HAL_GPIO_WritePin(MTRR_INLC_GPIO_Port, MTRR_INLC_Pin, GPIO_PIN_SET); //	set INL to true
@@ -352,6 +352,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
+	  HAL_GPIO_WritePin(MTRR_INLA_GPIO_Port, MTRR_INLA_Pin, GPIO_PIN_RESET); //	set INL to true
+	  HAL_GPIO_WritePin(MTRR_INLB_GPIO_Port, MTRR_INLB_Pin, GPIO_PIN_RESET); //	set INL to true
+	  HAL_GPIO_WritePin(MTRR_INLC_GPIO_Port, MTRR_INLC_Pin, GPIO_PIN_RESET); //	set INL to true
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
   while (1)

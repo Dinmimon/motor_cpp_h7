@@ -10,19 +10,18 @@
 
 #include "Motor.h"
 #include "fake_encoder.h"
-#include "trap_traj.h"
+#include "TrajController.h"
 #include "stm32h7xx_hal.h"
 
 class MotorManager {
 public:
     static void init();
-    static void setMotors(Motor &motorR, Motor &motorL);
+    static void setMotor(uint8_t index, Motor& motor);
     static void processADCCallback(ADC_HandleTypeDef *hadc);
     
 private:
     static Motor *motor[2];
-    static TRAPEZ_trapezoidalTrajectory_t trg;
-    static int traj_activate;
+    static TrajController trajectory;
     static FakeEncoderSim encoder;
 };
 
