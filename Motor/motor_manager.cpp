@@ -10,7 +10,7 @@
 #include "Baseadcsensor.h"
 
 // Static member definitions
-Motor* MotorManager::motor[2] = {nullptr, nullptr};
+Motor *MotorManager::motor[2] = {nullptr, nullptr};
 TrajController MotorManager::trajectory;
 FakeEncoderSim MotorManager::encoder{10000, 1};
 
@@ -21,14 +21,16 @@ void MotorManager::init()
     motor[1] = nullptr;
 }
 
-void MotorManager::setMotor(uint8_t index, Motor& motor)
+void MotorManager::setMotor(uint8_t index, Motor &motor)
 {
-    //protection against null pointers
-    if (&motor == nullptr) {
+    // protection against null pointers
+    if (&motor == nullptr)
+    {
         return;
-    }   
+    }
 
-    if (index < 2) {
+    if (index < 2)
+    {
         MotorManager::motor[index] = &motor;
     }
 }
@@ -38,11 +40,19 @@ void MotorManager::processADCCallback(ADC_HandleTypeDef *hadc)
 
     if (hadc->Instance == ADC1)
     {
+        if (motor[1] != nullptr)
+        {
+            motor[1]->motor_current_control_loop();
+        }
         // ADC1 conversion complete callback
         HAL_GPIO_WritePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin, GPIO_PIN_SET);
     }
     else if (hadc->Instance == ADC2)
     {
+        if (motor[0] != nullptr)
+        {
+            motor[0]->motor_current_control_loop();
+        }
         // ADC2 conversion complete callback
         HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_SET);
     }
@@ -56,13 +66,6 @@ void MotorManager::processADCCallback(ADC_HandleTypeDef *hadc)
         HAL_GPIO_WritePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_PIN_RESET);
     }
 
-    if (motor[0] != nullptr) {
-        motor[0]->motor_current_control_loop();
-    }
-    if (motor[1] != nullptr) {
-        motor[1]->motor_current_control_loop();
-    }
-    
     HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
 }
 
